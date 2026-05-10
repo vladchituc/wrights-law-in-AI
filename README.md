@@ -44,23 +44,38 @@ The Wright exponent of 0.85 is an **upper bound** on the true model-capability e
 
 **The 0.85 exponent should therefore be read as "the inflated estimate."** The substantive claim — visible exponential is the shadow of cumulative investment passing through a sublinear conversion exponent — is robust to all three caveats. The specific number is not robust to its first decimal place.
 
-## Robustness check: METR-17-only cumulative compute
+## Robustness checks
 
-The headline analysis above computes cumulative compute from the full Epoch frontier-model corpus (~137 models), since Wright's Law is about industry-level cumulative learning rather than just the subset METR happened to evaluate. As a robustness check, the script `wrights_law_metr17.py` runs the same analysis using cumulative compute computed *only* from the 17 METR SOTA models' own training-FLOP estimates.
+The headline analysis above computes cumulative compute from Epoch AI's full frontier-model corpus (~137 models). Two alternative specifications, reported here for transparency. Both are reproducible by running `robustness_checks.py`.
 
-Both methods produce a clear sublinear power law and Sahal's identity nearly closes in each:
+### 1. METR-17-only cumulative compute
+
+What if you compute cumulative compute using only the 17 METR-evaluated models, rather than the full Epoch corpus?
 
 | Statistic | Full Epoch corpus (headline) | METR-17 only |
 |---|---|---|
 | Horizon doubling | 188 d (R² = 0.94) | 188 d (R² = 0.94) |
 | Cumulative compute doubling | 163 d (R² = **0.99**) | 147 d (R² = 0.96) |
 | Wright exponent | **0.85** (R² = 0.91) | 0.74 (R² = 0.87) |
-| Compute multiplier per 2× horizon | 2.25× | 2.56× |
-| Sahal identity check (predicted vs observed horizon doubling) | 191 vs 188 d (**within 3 days**) | 199 vs 188 d (within 11 days) |
+| Sahal identity (predicted vs. observed horizon doubling) | 191 vs. 188 d (**within 3 days**) | 199 vs. 188 d (within 11 days) |
 
-The full Epoch corpus fits are tighter across all three panels, visible especially in Panel B (cumulative compute over time), where the full-corpus version is essentially on a line (R² = 0.99) while the METR-17 version shows visible curvature because the small set of late-period models clumps the cumulative ramp toward the end. The METR-17 figure is included at `figures/wrights_law_in_AI_metr17.png` for comparison.
+The full Epoch corpus is the headline because Wright's Law is about industry-wide cumulative learning (papers, techniques, employee mobility, dataset curation, etc.) — not just the slice METR happened to evaluate. Frontier compute spent on, say, LLaMA-3 contributed to industry knowledge even though METR didn't run an eval on it. Restricting cumulative input to the METR-17 systematically undercounts the relevant quantity, which is visible in the lower R²s and looser identity check.
 
-Qualitatively the story is unchanged in both: sublinear power law in cumulative compute, exponential growth in cumulative investment, Sahal's identity nearly closes, no sign of explosion or regime change.
+Qualitatively the story is unchanged either way: sublinear power law, Sahal's identity nearly closes, no sign of explosion or regime change.
+
+### 2. Per-model (non-cumulative) compute
+
+What if you plot horizon against each model's own training compute, rather than against cumulative industry compute? This is the Kaplan/Hoffmann scaling-laws form: capability vs. the specific training run that produced it.
+
+| Statistic | Headline (cumulative) | Per-model (non-cumulative) |
+|---|---|---|
+| Form | horizon ∝ cumFLOP^0.85 | horizon ∝ FLOP^0.83 |
+| R² | **0.91** | 0.79 |
+| Multiplier per 2× horizon | 2.25× cumulative compute | 2.30× per-model compute |
+
+**The exponents are similar — the R²s are not.** Per-model compute explains 79% of horizon variance; cumulative industry compute explains 91%. The 12-percentage-point gap is the Wright-Law spillover effect quantified: each new model benefits from accumulated industry learning beyond whatever its own training run contributed. Concrete examples in the data: Claude Opus 4.6 trained on the same compute as Gemini 3 Pro (1e26 FLOP) but has 3× the horizon. Claude Opus 4.5 trained on the same compute as o3 (8e25 FLOP) but has 2.5× the horizon. Same per-model compute, different horizons — because the later models came after more industry learning had accumulated.
+
+So per-model compute is a real predictor of capability, but it's not the load-bearing predictor. The Wright/Sahal mechanism — capability scaling sublinearly with *cumulative industry input* — captures more of the variance and is the underlying regularity.
 
 ## Comparison to industrial technologies
 
@@ -91,11 +106,10 @@ The script reads from `data/` and writes to `figures/`. Should produce the panel
 ## Files
 
 - `wrights_law_in_AI.py` — main analysis script (full Epoch corpus method)
-- `wrights_law_metr17.py` — robustness check (METR-17 only)
+- `robustness_checks.py` — alternative specifications (METR-17 only, per-model non-cumulative)
 - `data/metr_benchmark.yaml` — METR Time Horizon 1.1 corpus
 - `data/frontier_ai_models.csv` — Epoch AI frontier-model corpus
-- `figures/wrights_law_in_AI.png` — main three-panel figure
-- `figures/wrights_law_in_AI_metr17.png` — robustness-check three-panel figure
+- `figures/wrights_law_in_AI.png` — three-panel figure
 - `requirements.txt` — Python dependencies
 
 ## License
