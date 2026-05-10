@@ -44,6 +44,24 @@ The Wright exponent of 0.85 is an **upper bound** on the true model-capability e
 
 **The 0.85 exponent should therefore be read as "the inflated estimate."** The substantive claim — visible exponential is the shadow of cumulative investment passing through a sublinear conversion exponent — is robust to all three caveats. The specific number is not robust to its first decimal place.
 
+## Robustness check: METR-17-only cumulative compute
+
+The headline analysis above computes cumulative compute from the full Epoch frontier-model corpus (~137 models), since Wright's Law is about industry-level cumulative learning rather than just the subset METR happened to evaluate. As a robustness check, the script `wrights_law_metr17.py` runs the same analysis using cumulative compute computed *only* from the 17 METR SOTA models' own training-FLOP estimates.
+
+Both methods produce a clear sublinear power law and Sahal's identity nearly closes in each:
+
+| Statistic | Full Epoch corpus (headline) | METR-17 only |
+|---|---|---|
+| Horizon doubling | 188 d (R² = 0.94) | 188 d (R² = 0.94) |
+| Cumulative compute doubling | 163 d (R² = **0.99**) | 147 d (R² = 0.96) |
+| Wright exponent | **0.85** (R² = 0.91) | 0.74 (R² = 0.87) |
+| Compute multiplier per 2× horizon | 2.25× | 2.56× |
+| Sahal identity check (predicted vs observed horizon doubling) | 191 vs 188 d (**within 3 days**) | 199 vs 188 d (within 11 days) |
+
+The full Epoch corpus fits are tighter across all three panels, visible especially in Panel B (cumulative compute over time), where the full-corpus version is essentially on a line (R² = 0.99) while the METR-17 version shows visible curvature because the small set of late-period models clumps the cumulative ramp toward the end. The METR-17 figure is included at `figures/wrights_law_in_AI_metr17.png` for comparison.
+
+Qualitatively the story is unchanged in both: sublinear power law in cumulative compute, exponential growth in cumulative investment, Sahal's identity nearly closes, no sign of explosion or regime change.
+
 ## Comparison to industrial technologies
 
 Wright exponents (cost form, equivalent to capability form by sign flip) for selected industries, from Nagy, Farmer, Bui & Trancik (2013) *PLoS One*, "Statistical Basis for Predicting Technological Progress":
@@ -72,10 +90,12 @@ The script reads from `data/` and writes to `figures/`. Should produce the panel
 
 ## Files
 
-- `wrights_law_in_AI.py` — analysis script (~290 lines)
+- `wrights_law_in_AI.py` — main analysis script (full Epoch corpus method)
+- `wrights_law_metr17.py` — robustness check (METR-17 only)
 - `data/metr_benchmark.yaml` — METR Time Horizon 1.1 corpus
 - `data/frontier_ai_models.csv` — Epoch AI frontier-model corpus
-- `figures/wrights_law_in_AI.png` — the three-panel figure
+- `figures/wrights_law_in_AI.png` — main three-panel figure
+- `figures/wrights_law_in_AI_metr17.png` — robustness-check three-panel figure
 - `requirements.txt` — Python dependencies
 
 ## License
