@@ -79,7 +79,7 @@ METR_FLOP = {
 metr['own_flop'] = metr['id'].map(METR_FLOP)
 metr['flop_cum'] = metr['own_flop'].cumsum()
 
-ANCHOR_CUM = 1e22
+ANCHOR_CUM = 1.5e21  # anchor at GPT-2's own training FLOP so it sits at exactly 1× on the relative axis
 
 # === Fits ===
 def fit_lin(x, y):
