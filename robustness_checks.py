@@ -30,7 +30,7 @@ DATA_DIR = os.path.join(HERE, 'data')
 with open(os.path.join(DATA_DIR, 'metr_benchmark.yaml')) as f: d = yaml.safe_load(f)
 metr = pd.DataFrame([{
     'id': k, 'date': pd.Timestamp(v['release_date']),
-    'y': v['metrics']['p50_horizon_length']['estimate'],
+    'y': v['metrics']['p80_horizon_length']['estimate'],
     'sota': v['metrics'].get('is_sota', False),
 } for k, v in d['results'].items()]).sort_values('date').reset_index(drop=True)
 metr = metr[metr.sota].sort_values('date').reset_index(drop=True)

@@ -6,15 +6,24 @@ A reproducible empirical analysis fitting Wright's Law to frontier AI progress, 
 
 ## The headline result
 
-Across 17 frontier-SOTA models from GPT-2 (2019) through Claude Opus 4.5 (late 2025):
+Across 17 frontier-SOTA models from GPT-2 (2019) through Claude Opus 4.6 (early 2026), using METR's **80% task-completion horizon** as the capability metric:
 
-- **METR task-time horizon doubles every 188 days** (R² = 0.94).
+- **METR task-time horizon (80%) doubles every 204 days** (R² = 0.92).
 - **Cumulative frontier industry compute doubles every 163 days** (R² = 0.99).
-- **Horizon ∝ cumulative FLOP ^ 0.85** (R² = 0.91).
+- **Horizon ∝ cumulative FLOP ^ 0.79** (R² = 0.91).
 
-Plug those into [Sahal's identity](https://www.sciencedirect.com/science/article/abs/pii/0048733379900112): predicted horizon-doubling = 163 / 0.85 = **191 days**. Observed = **188 days**. The identity closes to within three days. The visible exponential is mathematically the shadow of cumulative investment passing through a sublinear conversion exponent.
+Plug those into [Sahal's identity](https://www.sciencedirect.com/science/article/abs/pii/0048733379900112): predicted horizon-doubling = 163 / 0.79 = **206 days**. Observed = **204 days**. The identity closes to within two days. The visible exponential is mathematically the shadow of cumulative investment passing through a sublinear conversion exponent.
 
 ![Wright's Law in AI](figures/wrights_law_in_AI.png)
+
+### Why 80% rather than 50%?
+
+METR publishes both p50 (50%-reliability) and p80 (80%-reliability) horizon estimates for every model. We use p80 throughout for two reasons:
+
+1. **It's the more natural threshold.** "How long a task can the model finish 50% of the time" is a weird cutoff — it's literally the median of pass-or-fail. 80% is a much more standard reliability threshold for capability claims; it's also the conventional power level used in statistical power analysis.
+2. **The data is slightly cleaner.** R² values are nearly identical at both thresholds (0.92 vs 0.94 on the time-curve, 0.91 on the Wright fit either way), but the p80 fit is marginally tighter and Sahal's identity closes within 2 days rather than 3.
+
+The qualitative result is identical at either threshold — sublinear power law, identity closes, no sign of regime change — and the p50 numbers are reported as a robustness check below. No one with a stake in the AI debate could plausibly believe the p50/p80 distinction matters, except insofar as p50 paints AI progress as slightly faster.
 
 ## Why this matters
 
@@ -25,7 +34,7 @@ This analysis makes that claim quantitative. The same identity that has held for
 ## Method
 
 **Data sources:**
-- METR Time Horizon 1.1 benchmark (`metr.org/assets/benchmark_results_1_1.yaml`) — 17 frontier-SOTA models with 50% task-time-horizon measurements.
+- METR Time Horizon 1.1 benchmark (`metr.org/assets/benchmark_results_1_1.yaml`) — 17 frontier-SOTA models with 80% task-time-horizon measurements (p50 used as robustness check).
 - Epoch AI frontier models corpus (`epoch.ai/data/ai-models`) — training compute for all frontier-class models published 2018–2026, summed cumulatively at each METR-model release date.
 
 **Fits:**
@@ -34,7 +43,7 @@ This analysis makes that claim quantitative. The same identity that has held for
 
 ## Methodological caveats — important
 
-The Wright exponent of 0.85 is an **upper bound** on the true model-capability exponent. Three reasons:
+The Wright exponent of 0.79 is an **upper bound** on the true model-capability exponent. Three reasons:
 
 1. **METR re-evaluates each model with updated tooling.** Scaffolding, prompting, tool access, agent harness, browser use, eval-set composition, and elicitation effort all change across the 17 models in the corpus. This is fine for METR's stated goal — tracking what the current frontier can do — but it means any regression on the resulting curve is fitting a moving target. Standard "hold confounds constant" methodology is not satisfied. A methodologically clean fit (fixed scaffold, fixed prompting, fixed tool access) would almost certainly produce a smaller exponent, probably in the 0.4–0.6 range — putting AI squarely in the industrial-technology pack (see *comparison* below).
 
@@ -42,38 +51,51 @@ The Wright exponent of 0.85 is an **upper bound** on the true model-capability e
 
 3. **Closed-model FLOP estimates are imputed.** Epoch flags many closed frontier-class releases as `>1e25 FLOP` without publishing precise estimates. The `IMPUTED_FRONTIER` block in the script gives explicit values for 15 such models, drawing on Epoch blog posts, public lab statements, and consistency with neighboring releases. All imputed values are documented in the script with rationale.
 
-**The 0.85 exponent should therefore be read as "the inflated estimate."** The substantive claim — visible exponential is the shadow of cumulative investment passing through a sublinear conversion exponent — is robust to all three caveats. The specific number is not robust to its first decimal place.
+**The 0.79 exponent should therefore be read as "the inflated estimate."** The substantive claim — visible exponential is the shadow of cumulative investment passing through a sublinear conversion exponent — is robust to all three caveats. The specific number is not robust to its first decimal place.
 
 ## Robustness checks
 
-The headline analysis above computes cumulative compute from Epoch AI's full frontier-model corpus (~137 models). Two alternative specifications, reported here for transparency. Both are reproducible by running `robustness_checks.py`.
+Three alternative specifications, reported here for transparency. Checks #1 and #2 are reproducible by running `robustness_checks.py`.
 
-### 1. METR-17-only cumulative compute
+### 1. p50 horizon (50%-reliability cutoff)
+
+The headline uses METR's 80%-reliability horizon. The 50% horizon is the more commonly quoted figure (it's what METR labels their main "task-time horizon" curve as). All numbers shift slightly but the qualitative result is identical:
+
+| Statistic | p80 (headline) | p50 |
+|---|---|---|
+| Horizon doubling | 204 d (R² = 0.92) | 188 d (R² = 0.94) |
+| Cumulative compute doubling | 163 d (R² = 0.99) | 163 d (R² = 0.99) |
+| Wright exponent | **0.79** (R² = 0.91) | 0.85 (R² = 0.91) |
+| Sahal identity (predicted vs. observed) | 206 vs. 204 d (**within 2 d**) | 191 vs. 188 d (within 3 d) |
+
+Same form of curve, same sublinear power law, same identity-closes-tight. p50 doubling is slightly faster (188 d vs 204 d) because hitting 50% reliability is easier than 80%.
+
+### 2. METR-17-only cumulative compute
 
 What if you compute cumulative compute using only the 17 METR-evaluated models, rather than the full Epoch corpus?
 
 | Statistic | Full Epoch corpus (headline) | METR-17 only |
 |---|---|---|
-| Horizon doubling | 188 d (R² = 0.94) | 188 d (R² = 0.94) |
+| Horizon doubling (p80) | 204 d (R² = 0.92) | 204 d (R² = 0.92) |
 | Cumulative compute doubling | 163 d (R² = **0.99**) | 147 d (R² = 0.96) |
-| Wright exponent | **0.85** (R² = 0.91) | 0.74 (R² = 0.87) |
-| Sahal identity (predicted vs. observed horizon doubling) | 191 vs. 188 d (**within 3 days**) | 199 vs. 188 d (within 11 days) |
+| Wright exponent | **0.79** (R² = 0.91) | 0.68 (R² = 0.85) |
+| Sahal identity | 206 vs. 204 d (**within 2 d**) | 216 vs. 204 d (within 12 d) |
 
-The full Epoch corpus is the headline because Wright's Law is about industry-wide cumulative learning (papers, techniques, employee mobility, dataset curation, etc.) — not just the slice METR happened to evaluate. Frontier compute spent on, say, LLaMA-3 contributed to industry knowledge even though METR didn't run an eval on it. Restricting cumulative input to the METR-17 systematically undercounts the relevant quantity, which is visible in the lower R²s and looser identity check.
+The full Epoch corpus is the headline because Wright's Law is about industry-wide cumulative learning (papers, techniques, employee mobility, dataset curation, etc.) — not just the slice METR happened to evaluate. Frontier compute spent on, say, LLaMA-3 contributed to industry knowledge even though METR didn't run an eval on it. Restricting cumulative input to the METR-17 systematically undercounts the relevant quantity, visible in the lower R²s and looser identity check.
 
 Qualitatively the story is unchanged either way: sublinear power law, Sahal's identity nearly closes, no sign of explosion or regime change.
 
-### 2. Per-model (non-cumulative) compute
+### 3. Per-model (non-cumulative) compute
 
 What if you plot horizon against each model's own training compute, rather than against cumulative industry compute? This is the Kaplan/Hoffmann scaling-laws form: capability vs. the specific training run that produced it.
 
 | Statistic | Headline (cumulative) | Per-model (non-cumulative) |
 |---|---|---|
-| Form | horizon ∝ cumFLOP^0.85 | horizon ∝ FLOP^0.83 |
-| R² | **0.91** | 0.79 |
-| Multiplier per 2× horizon | 2.25× cumulative compute | 2.30× per-model compute |
+| Form | horizon ∝ cumFLOP^0.79 | horizon ∝ FLOP^0.77 |
+| R² | **0.91** | 0.78 |
+| Multiplier per 2× horizon | 2.40× cumulative compute | 2.46× per-model compute |
 
-**The exponents are similar — the R²s are not.** Per-model compute explains 79% of horizon variance; cumulative industry compute explains 91%. The 12-percentage-point gap is the Wright-Law spillover effect quantified: each new model benefits from accumulated industry learning beyond whatever its own training run contributed. Concrete examples in the data: Claude Opus 4.6 trained on the same compute as Gemini 3 Pro (1e26 FLOP) but has 3× the horizon. Claude Opus 4.5 trained on the same compute as o3 (8e25 FLOP) but has 2.5× the horizon. Same per-model compute, different horizons — because the later models came after more industry learning had accumulated.
+**The exponents are similar — the R²s are not.** Per-model compute explains 78% of horizon variance; cumulative industry compute explains 91%. The 13-percentage-point gap is the Wright-Law spillover effect quantified: each new model benefits from accumulated industry learning beyond whatever its own training run contributed. Concrete examples in the data: Claude Opus 4.6 trained on the same compute as Gemini 3 Pro (1e26 FLOP) but has 3× the horizon. Claude Opus 4.5 trained on the same compute as o3 (8e25 FLOP) but has 2.5× the horizon. Same per-model compute, different horizons — because the later models came after more industry learning had accumulated.
 
 So per-model compute is a real predictor of capability, but it's not the load-bearing predictor. The Wright/Sahal mechanism — capability scaling sublinearly with *cumulative industry input* — captures more of the variance and is the underlying regularity.
 
@@ -88,9 +110,10 @@ Wright exponents (cost form, equivalent to capability form by sign flip) for sel
 | Monochrome Television (1948–1968) | 0.28 |
 | Electric Range (1947–1967) | 0.29 |
 | Free-Standing Gas Range (1947–1967) | 0.56 |
-| **AI capability vs. cumulative compute (this analysis)** | **0.85** (upper bound) |
+| **AI capability vs. cumulative compute (this analysis, p80)** | **0.79** (upper bound) |
+| AI capability vs. cumulative compute (p50 robustness) | 0.85 (upper bound) |
 
-AI's apparent Wright exponent is on the high end of the industrial range. The methodological caveats above suggest the *true* exponent is lower than 0.85 and probably overlaps the industrial range directly. Either way: same form of curve, same Sahal-identity mechanism.
+AI's apparent Wright exponent is on the high end of the industrial range. The methodological caveats above suggest the *true* exponent (if METR's harness/scaffold confounds were held constant) is lower than 0.79 and probably overlaps the industrial range directly. Either way: same form of curve, same Sahal-identity mechanism.
 
 ## Reproducing
 

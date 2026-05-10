@@ -60,7 +60,7 @@ def fmt_doubling(v):
 with open(os.path.join(DATA_DIR, 'metr_benchmark.yaml')) as f: d=yaml.safe_load(f)
 metr=pd.DataFrame([{
     'id':k,'date':pd.Timestamp(v['release_date']),
-    'y':v['metrics']['p50_horizon_length']['estimate'],
+    'y':v['metrics']['p80_horizon_length']['estimate'],
     'sota':v['metrics'].get('is_sota',False),
 } for k,v in d['results'].items()]).sort_values('date').reset_index(drop=True)
 metr=metr[metr.sota].reset_index(drop=True)
@@ -218,9 +218,9 @@ labelsC = {'gpt2':(15,-3),'davinci_002':(15,-3),'gpt_3_5_turbo_instruct':(15,-3)
 fig, ax3 = plt.subplots(1, 3, figsize=(28, 9.5))
 plt.subplots_adjust(top=0.78, bottom=0.13, left=0.04, right=0.985, wspace=0.22)
 
-ylim_h=(1/200, 1/200*10**DEX)
+ylim_h=(1/200, 4*60)  # 0.3s to 4h — sized for p80 horizons (max ~70 min)
 metr_panel(ax3[0], metr, 'y', regA,
-    'A. Task horizons double every 6 months',
+    f'A. Task horizons (80%) double every {dblA/30.4:.0f} months',
     'metr.org', f'Doubling time: {dblA:.0f} days\nR² = {r2A:.2f}',
     ylim=ylim_h, ykind='time', label_pos=labelsA)
 
@@ -248,9 +248,9 @@ all_pows=[2**k for k in range(0,25)]
 xt=[v for v in all_pows if v>=1 and v<=10**DEX]
 xt_labels=[fmt_doubling(v) if i%2==0 else '' for i,v in enumerate(xt)]
 ax.set_xticks(xt); ax.set_xticklabels(xt_labels)
-yt=LOG_TICKS[(LOG_TICKS>=1/60)&(LOG_TICKS<=16*60)]
+yt=LOG_TICKS[(LOG_TICKS>=1/200)&(LOG_TICKS<=4*60)]
 ax.set_yticks(yt); ax.set_yticklabels([fmt_time(t*60) for t in yt])
-ax.set_xlim(1, 10**DEX); ax.set_ylim(1/60, 16*60)
+ax.set_xlim(1, 10**DEX); ax.set_ylim(1/200, 4*60)  # match Panel A for p80
 ax.grid(False)
 for s in ['top','right']: ax.spines[s].set_visible(False)
 ax.spines['left'].set_color('#999'); ax.spines['bottom'].set_color('#999')
