@@ -33,18 +33,7 @@ The standard framing of the AI debate is "will AI hit a wall, or will the scalin
 
 This analysis makes that claim quantitative. The same identity that has held for airplanes (since Theodore Wright's 1936 paper *Factors Affecting the Costs of Airplanes*), for solar PV, for beer, for refined cane sugar, for monochrome television, and for every other industrial technology anyone has measured, holds here too, on the most-cited capability curve in the AI discourse.
 
-The Wright fit has one big implication: the scary exponential in AI isn't the capability one — it's the investment one. Capability is sublinear in cumulative compute. Cumulative compute itself has been growing exponentially for over a decade. So the visible time-curve continues only as long as the investment curve does, and the investment curve runs into physical constraints quickly.
-
-Some concrete numbers. Today's frontier p80 horizon is about 1 hour. Using the empirical Wright fit and Sahal's identity (and assuming hardware efficiency keeps improving at the historical ~1.6×/year):
-
-| Target horizon | Cumulative compute needed | Years out | Peak-year energy | % US grid |
-|---|---|---|---|---|
-| +1 day (→ 25 hr) | **~50× all frontier compute ever spent** | 2.5 | 17 TWh | 0.4% |
-| +1 week (→ 169 hr) | **~540× current cumulative** | 4 | 94 TWh | 2.2% |
-| 1 month (730 hr) | **~3,500× current cumulative** | 5 | 344 TWh | 8% |
-| 1 year (8,760 hr) | **~80,000× current cumulative** | 7 | 3,120 TWh | **74%** |
-
-To put those peak-year figures in some kind of historical context: the largest sustained electricity buildout on record was China between 2003 and 2013, which added roughly 3,500 TWh of annual generation over a decade (peaking at ~500 TWh/yr added in 2010–2011, an unprecedented pace). The US has never managed more than ~200 TWh of generation added in a single year, even during the postwar buildout. Reaching the 1-year-horizon scenario above would require sustained capacity additions of ~450 TWh/yr to the US grid for seven years — comparable to China's all-time peak rate, applied to the US, dedicated entirely to AI training. Even the 1-month-horizon scenario requires ~70 TWh/yr of new US capacity for AI for five years straight, on top of the existing data-center buildout and everything else competing for grid capacity.
+The Wright fit has one big implication: the scary exponential in AI isn't the capability one — it's the investment one. Capability is sublinear in cumulative compute. Cumulative compute itself has been growing exponentially for over a decade. So the visible time-curve continues only as long as the investment curve does, and the investment curve cannot continue doubling forever — eventually energy, capital, or chip supply puts a ceiling on it.
 
 People seem to assume that recursive self-improvement will somehow change the rules of technological progress. It's possible! But I don't see anything in any data to support it. Labs have been training AI on the problem of producing better AI for almost a decade — meta-learning, learned optimizers, neural architecture search, AlphaChip (RL on chip layout, now used in every Google TPU), AlphaTensor (RL on matrix multiplication algorithms), LLMs trained on writing better training code. None of it has cascaded. All of it has produced normal incremental gains that landed on the existing Wright curve, alongside everything else. Once you automate any step of the AI-development pipeline, the most that happens is that you move down the exponential investment curve more quickly — which is to say, you exhaust your finite chip supply, your finite energy, and your finite capital *faster* than you otherwise would have.
 
