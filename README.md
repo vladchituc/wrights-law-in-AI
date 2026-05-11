@@ -55,6 +55,14 @@ The Wright exponent of 0.79 is an **upper bound** on the true model-capability e
 
 **The 0.79 exponent should therefore be read as "the inflated estimate."** The substantive claim — AI output is a sublinear power function of cumulative compute, and the visible exponential in time is what that produces when investment grows exponentially — is robust to all three caveats. The specific number is not robust to its first decimal place.
 
+## On the choice of cumulative compute
+
+A note on what is, in some ways, the most consequential analytic choice in this analysis. The standard Wright's Law mechanism — going back to Wright's 1936 paper on airplane manufacturing — is *knowledge spillover*. Each unit produced teaches the workforce, the supply chain, and the broader industry something that makes the next unit cheaper. The relevant input quantity is *cumulative production*, because the thing being accumulated is industry-wide learning, not anything specific to a particular factory.
+
+It's not obvious that this story should apply to AI. Compute is the obvious investment metric, but you could reasonably believe that AI capability scales with the compute used to train a *specific* model (which is what the conventional AI scaling laws — Kaplan 2020, Hoffmann/Chinchilla 2022 — describe) rather than with cumulative industry compute. That would be a perfectly coherent alternative framework, and a priori there's no obvious reason to prefer one over the other. Fitting horizon against cumulative industry compute, rather than per-model compute, is therefore a slightly weird analytic choice.
+
+What settles it is empirical. Per-model compute explains 78% of horizon variance (see Robustness Check #3 below). Cumulative industry compute explains 91%. The 13-percentage-point gap is exactly the kind of learning-spillover signature Wright's Law predicts, and it is hard to explain otherwise: if AI weren't following the same kind of industry-wide accumulation pattern as airplane manufacturing or solar PV deployment, we would expect per-model compute to be the better predictor, not the worse one. The data agrees with the Wright/Sahal framework against the alternative, which is also why we're using it.
+
 ## Robustness checks
 
 Three alternative specifications, reported here for transparency. Checks #1 and #2 are reproducible by running `robustness_checks.py`.
