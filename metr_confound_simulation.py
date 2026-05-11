@@ -111,11 +111,11 @@ log_x = np.log10(x_t)
 log_y = np.log10(y_t)
 apparent_b, apparent_intercept = np.polyfit(log_x, log_y, 1)
 
-# Apparent doubling time if each model t = 1 year
+# Apparent doubling time if each successive model is 6 months apart
+MONTHS_PER_MODEL = 6
 n_doublings = np.log2(y_t[-1] / y_t[0])
-years_elapsed = t_seq[-1] - t_seq[0]
-doubling_time_years = years_elapsed / n_doublings
-doubling_time_months = doubling_time_years * 12
+months_elapsed = (t_seq[-1] - t_seq[0]) * MONTHS_PER_MODEL
+doubling_time_months = months_elapsed / n_doublings
 
 xx = np.linspace(1, 100, 400)
 
@@ -141,7 +141,7 @@ title_text = f"Moving target: a and c grow each model (b held at {b0})"
 subtitle_text = (
     f"Each colored curve is one model's true scaling. Black dashed = observed trajectory across models.\n"
     f"Apparent log–log slope ≈ {apparent_b:.2f}, even though each underlying curve has b = {b0}.\n"
-    f"If each model t = 1 year, the trajectory looks like exponential growth doubling every "
+    f"If successive models are 6 months apart, the trajectory looks like exponential growth doubling every "
     f"{doubling_time_months:.1f} months — though every individual model is on a sublinear curve."
 )
 ax_demo.text(0, 1.18, title_text, transform=ax_demo.transAxes,
@@ -149,8 +149,14 @@ ax_demo.text(0, 1.18, title_text, transform=ax_demo.transAxes,
 ax_demo.text(0, 1.10, subtitle_text, transform=ax_demo.transAxes,
              fontsize=10.5, va='top', ha='left', color='#555')
 
-# Suptitle
-fig.suptitle(r'$y = a \cdot x^{b} + c$', fontsize=16, fontweight='bold', y=0.995)
+# Suptitle: equation + the key conceptual note
+fig.text(0.5, 0.985, r'$y = a \cdot x^{b} + c$',
+         fontsize=16, fontweight='bold', ha='center', va='top')
+fig.text(0.5, 0.955,
+         "Of the three parameters, only b determines whether returns are diminishing (b < 1), "
+         "constant (b = 1), or accelerating (b > 1).\nSweeps of a or c change the level of observed "
+         "values but not the curvature.",
+         fontsize=11, ha='center', va='top', color='#444')
 
 out_path = os.path.join(FIG_DIR, 'metr_confound_illustration.png')
 plt.savefig(out_path, dpi=200, bbox_inches='tight', facecolor='white')
@@ -161,6 +167,6 @@ print('=== Moving-target summary ===')
 print(f'True per-model Wright exponent (b):          {b0}')
 print(f'Apparent log-log slope of trajectory:        {apparent_b:.3f}')
 print(f'Inflation factor:                            {apparent_b/b0:.2f}×')
-print(f'If each model t = 1 year:')
+print(f'If successive models are 6 months apart:')
 print(f'  y_1 = {y_t[0]:.1f}, y_10 = {y_t[-1]:.1f}')
 print(f'  Apparent doubling time:                    {doubling_time_months:.1f} months')
