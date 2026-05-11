@@ -117,6 +117,28 @@ Wright exponents (cost form, equivalent to capability form by sign flip) for sel
 
 AI's apparent Wright exponent is on the high end of the industrial range. The methodological caveats above suggest the *true* exponent (if METR's harness/scaffold confounds were held constant) is lower than 0.79 and probably overlaps the industrial range directly. Either way: same form of curve, same Sahal-identity mechanism.
 
+## Input substitution and the RL-slowdown question
+
+A specific version of the "AI is slowing down" intuition that motivated longer timelines in 2024 went like this: long-horizon RL is brutally inefficient per FLOP (sparse rewards on multi-day tasks; each training episode produces one bit of feedback after a lot of compute), and we'd already burned through many orders of magnitude of cheap-to-reallocate RL compute getting from GPT-4 to o1 to o3, so further OOMs would require *building* new chip capacity rather than reassigning existing capacity. Both observations are correct. RL really is inefficient at long horizons. The cheap OOMs really did get expensive.
+
+The mistake was identifying RL with AI progress. Under Wright/Sahal, AI progress is a function of cumulative *industry investment*, regardless of which specific input is currently absorbing it. The exponent in Wright's law is a feature of the technology; the rate of input growth determines the time-axis doubling. *Which* input is being scaled doesn't enter the equation.
+
+Solar PV is the cleanest illustration. Its cost-per-watt has fallen ~24% per doubling of cumulative deployment for fifty years, even though the load-bearing improvement underneath has shifted at least seven times: silicon-cell efficiency in the 70s and 80s, manufacturing scale in the 90s, balance-of-system reductions in the 2000s, Chinese capacity buildout in the 2010s, next-generation cell architectures (PERC, then TOPCon, then HJT) since. The aggregate cost curve never noticed any of the transitions. Each generation, whichever lever was cheapest got pushed.
+
+AI is doing the same thing in compressed time. The cheapest lever has shifted multiple times since 2017:
+
+- **2017–2018**: transformer architecture (Vaswani et al.) replacing LSTM/RNN
+- **2019–2020**: pure-scale pretraining (BERT, GPT-2, GPT-3); Kaplan scaling laws
+- **2022**: instruction tuning + RLHF (InstructGPT, then ChatGPT)
+- **2023**: mixture-of-experts and long-context engineering (GPT-4-class, Claude 100k, Gemini 1M)
+- **2024**: synthetic data with verifiers (data-wall mitigation)
+- **late 2024**: test-time compute via RL on chain-of-thought (o1, then o3)
+- **2025–2026**: harness and scaffolding engineering, longer agent loops
+
+The METR doubling time stayed roughly constant across every one of these shifts. The cumulative-compute doubling time stayed roughly constant too. The Wright exponent — to the extent we can pin it down — has not shifted.
+
+So the RL-slowdown intuition wasn't wrong about RL. It was wrong to think AI progress was about RL. Whichever input gets expensive, labs find the next cheap one and push it; the aggregate curve is invariant under the substitution. Spud or Mythos being good in 2026 is not evidence of regime change — it is evidence that the checks are still going up, and that the next cheap lever was already lined up by the time the previous one (test-time compute) started looking expensive.
+
 ## Reproducing
 
 ```bash
