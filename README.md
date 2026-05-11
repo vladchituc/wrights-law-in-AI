@@ -14,6 +14,8 @@ Across 17 frontier-SOTA models from GPT-2 (2019) through Claude Opus 4.6 (early 
 
 Plug those into [Sahal's identity](https://www.sciencedirect.com/science/article/abs/pii/0048733379900112): predicted horizon-doubling = 163 / 0.79 = **206 days**. Observed = **204 days**. The identity closes to within two days. The visible exponential is mathematically the shadow of cumulative investment passing through a sublinear conversion exponent.
 
+The compute-doubling pattern is not a recent observation. [Epoch AI](https://epoch.ai/blog/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year) has documented per-model frontier training compute doubling roughly every 5.7 months since the start of the deep learning era in 2011 — a 14-year regularity. Verified directly from their corpus: n = 81 frontier-class models published 2011–2025, doubling time = **165 days** (5.4 months), R² = 0.97. So the exponential investment growth that Sahal's identity passes through to produce the visible time-curve is itself one of the longest-running empirical regularities in computing.
+
 ![Wright's Law in AI](figures/wrights_law_in_AI.png)
 
 ### Why 80% rather than 50%?
