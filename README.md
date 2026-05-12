@@ -75,33 +75,6 @@ The Wright exponent of 0.79 is an **upper bound** on the true model-capability e
 
 **The 0.79 exponent should therefore be read as "the inflated estimate."** The substantive claim — AI output is a sublinear power function of cumulative compute, and the visible exponential in time is what that produces when investment grows exponentially — is robust to all three caveats. The specific number is not robust to its first decimal place.
 
-## Identification: b is not separately determined from tooling growth
-
-The previous caveat shows that scaffold/tool drift produces apparent exponents inflated above the true model-capability exponent. We can pin down how big that inflation could be by directly fitting the METR series with b held fixed at various sublinear values, asking what trajectory of a_t (the per-model prefactor) would be needed to explain the data — under the constraint that a_t grow at most *linearly* (or as a sublinear power law) in time. Exponential growth in a_t is disallowed: if the whole point is that AI is not exponential, invoking exponential tooling growth to recover the apparent exponential is self-defeating.
-
-The result, fitting with c = 0 (so all growth has to come from a or compute):
-
-| Fixed b | a-growth shape | R²(log-y) | Total a-growth over 7 yr | Interpretation |
-|---|---|---|---|---|
-| 0.79 | constant | 0.909 | 1.0× | The unconstrained joint fit. All apparent growth attributed to compute scaling. |
-| 0.70 | linear in t | 0.905 | 2.0× | Tooling roughly doubled over 7 years. |
-| **0.60** | **linear in t** | **0.891** | **4.25×** | **Tooling quadrupled — squarely plausible. b sits in the industrial Wright pack.** |
-| 0.50 | linear in t | 0.865 | 9.3× | Tooling 9× — still plausible given what scaffolding has actually done. |
-| 0.40 | linear in t | 0.826 | 20× | Constraint starts to bite; harder to defend. |
-| 0.30 | linear in t | 0.772 | 45× | Linear growth no longer enough; fit visibly worse. |
-
-The headline finding: **b = 0.60 with linear (~4×) growth in a fits METR essentially as well as b = 0.79 with no tooling growth at all.** The R² difference is 0.018. The data alone cannot tell these scenarios apart.
-
-![Identification illustration](figures/b_sensitivity_illustration.png)
-
-In the figure above, each METR model gets its own hypothetical Wright curve at b = 0.60, with a prefactor a_i that grows linearly across models (the short colored segments). The 17 data points lie on their respective curves. The black dashed line connects them — that's the observed trajectory across models — and its apparent log-log slope (~0.79) is noticeably steeper than the underlying 0.60. The dotted line shows the apparent slope explicitly. **No exponential growth anywhere. No regime change. Just b = 0.60 with mild linear scaffolding improvement of ~4× over seven years**, which is, if anything, conservative relative to what scaffolding/harness improvements have actually accomplished in the 2019-2026 window (basic prompting → reasoning models with agent loops, tool use, long context, etc.).
-
-So the honest empirical statement is:
-
-> **The METR series is fit nearly as well by b ≈ 0.5–0.7 with linear scaffolding improvement of a few-fold as it is by b ≈ 0.79 with no scaffolding improvement at all.** Linear (not exponential) tooling growth is sufficient. Given that scaffolding has obviously improved, the lower-b interpretation is at least as empirically defensible as the headline value — and puts AI squarely in the industrial Wright pack.
-
-Reproducible via `b_sensitivity_simulation.py`.
-
 ## On the choice of cumulative compute
 
 A note on what is, in some ways, the most consequential analytic choice in this analysis. The standard Wright's Law mechanism — going back to Wright's 1936 paper on airplane manufacturing — is *knowledge spillover*. Each unit produced teaches the workforce, the supply chain, and the broader industry something that makes the next unit cheaper. The relevant input quantity is *cumulative production*, because the thing being accumulated is industry-wide learning, not anything specific to a particular factory.
